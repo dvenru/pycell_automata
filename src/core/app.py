@@ -33,8 +33,11 @@ class AppWindow(pgl.window.Window):
         pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if button == mouse.LEFT and self.cursor.focused_on_map:
-            self.automat.set_tile(self.cursor.on_map_pos)
+        if self.cursor.focused_on_map:
+            if button == mouse.LEFT:
+                self.automat.set_tile(self.cursor.on_map_pos)
+            elif button == mouse.RIGHT:
+                self.automat.set_tile(self.cursor.on_map_pos, False)
 
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
         self.cursor.update_position((x, y))

@@ -8,6 +8,8 @@ Implementation of a cellular automaton in Python and Pyglet
 > 
 > LEFT BUTTON -> set life
 > 
+> RIGHT BUTTON -> delete life
+> 
 > SPACE -> pause / run
 
 <hr>
