@@ -7,6 +7,8 @@ from src.env.tilemap import TileMap
 
 
 class Automat:
+    SPEED_UP = 0
+    SPEED_DOWN = 1
 
     def __init__(self, tile_map: TileMap) -> None:
         size = tile_map.get_size_map()
@@ -17,8 +19,11 @@ class Automat:
         self.life_rule = LifeRule()
         self._init_tile_map_tiles()
 
-        self.update_speed = 1/8
+        self.speed = 8.0
         self.is_paused = False
+
+    def update_speed(self, speed_state: int) -> float:
+        return clamp(1.0/(self.speed * 2.0) if speed_state else 1.0 / (self.speed / 2.0), 1.0/1.0, 1.0/32.0)
 
     def _init_tile_map_tiles(self) -> None:
         for num_line in range(len(self.present_map)):

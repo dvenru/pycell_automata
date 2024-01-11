@@ -12,7 +12,7 @@ class AppWindow(pgl.window.Window):
     def __init__(self, *args, **kwargs) -> None:
         super(AppWindow, self).__init__(*args, **kwargs)
 
-        self.tile_map = TileMap((100, 100))
+        self.tile_map = TileMap((100, 100), 15)
         self.tile_map.set_position_from_center(Vec2(self.width / 2, self.height / 2))
 
         self.cursor = TileMapCursor(self.tile_map)
@@ -29,7 +29,7 @@ class AppWindow(pgl.window.Window):
 
         self.fps_label = pgl.window.FPSDisplay(window = self)
 
-        pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed)
+        pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.cursor.focused_on_map:
@@ -45,13 +45,21 @@ class AppWindow(pgl.window.Window):
         self.cursor.update_position((x, y))
 
     def on_key_press(self, symbol, modifiers) -> None:
+        # Speed control
         if symbol == key.SPACE:
             if self.automat.is_paused:
                 self.automat.is_paused = False
-                pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed)
+                pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
             else:
                 self.automat.is_paused = True
                 pgl.clock.unschedule(self.automat.update)
+
+        elif symbol == key.RIGHT:
+            pgl.clock.unschedule(self.automat.update)
+            pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed(self.automat.SPEED_UP))
+        elif symbol == key.LEFT:
+            pgl.clock.unschedule(self.automat.update)
+            pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed(self.automat.SPEED_DOWN))
 
     def on_draw(self) -> None:
         self.clear()
