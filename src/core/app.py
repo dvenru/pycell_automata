@@ -1,0 +1,58 @@
+import pyglet as pgl
+from pyglet.math import Vec2
+from pyglet.window import key, mouse
+
+from src.env.tilemap import TileMap
+from src.env.automat import Automat
+from src.env.cursor import TileMapCursor
+
+
+class AppWindow(pgl.window.Window):
+
+    def __init__(self, *args, **kwargs) -> None:
+        super(AppWindow, self).__init__(*args, **kwargs)
+        self.set_caption("Test")
+
+        self.tile_map = TileMap((100, 100))
+        self.tile_map.set_position_from_center(Vec2(self.width / 2, self.height / 2))
+
+        self.cursor = TileMapCursor(self.tile_map)
+
+        self.automat = Automat(self.tile_map)
+        # self.automat.life_rule.set_states(4, [
+        #     (189, 224, 254),
+        #     (255, 200, 221),
+        #     (255, 175, 204),
+        #     (205, 180, 219)
+        # ])
+
+        self.automat.life_rule.set_states(11, [])
+
+        self.fps_label = pgl.window.FPSDisplay(window = self)
+
+        pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == mouse.LEFT and self.cursor.focused_on_map:
+            self.automat.set_tile(self.cursor.on_map_pos)
+
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int) -> None:
+        self.cursor.update_position((x, y))
+
+    def on_mouse_drag(self, x: int, y: int, dx: int, dy: int, buttons, modifiers) -> None:
+        self.cursor.update_position((x, y))
+
+    def on_key_press(self, symbol, modifiers) -> None:
+        if symbol == key.SPACE:
+            if self.automat.is_paused:
+                self.automat.is_paused = False
+                pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed)
+            else:
+                self.automat.is_paused = True
+                pgl.clock.unschedule(self.automat.update)
+
+    def on_draw(self) -> None:
+        self.clear()
+        self.tile_map.map_batch.draw()
+        self.cursor.cursor_rect.draw()
+        self.fps_label.draw()
