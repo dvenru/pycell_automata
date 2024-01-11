@@ -30,6 +30,7 @@ class AppWindow(pgl.window.Window):
         self.fps_label = pgl.window.FPSDisplay(window = self)
 
         pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
+        print(self.automat.speed)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.cursor.focused_on_map:
@@ -56,10 +57,12 @@ class AppWindow(pgl.window.Window):
 
         elif symbol == key.RIGHT:
             pgl.clock.unschedule(self.automat.update)
-            pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed(self.automat.SPEED_UP))
+            self.automat.update_speed(self.automat.SPEED_UP)
+            pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
         elif symbol == key.LEFT:
             pgl.clock.unschedule(self.automat.update)
-            pgl.clock.schedule_interval(self.automat.update, self.automat.update_speed(self.automat.SPEED_DOWN))
+            self.automat.update_speed(self.automat.SPEED_DOWN)
+            pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
 
     def on_draw(self) -> None:
         self.clear()
