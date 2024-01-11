@@ -11,7 +11,6 @@ class AppWindow(pgl.window.Window):
 
     def __init__(self, *args, **kwargs) -> None:
         super(AppWindow, self).__init__(*args, **kwargs)
-        self.set_caption("Test")
 
         self.tile_map = TileMap((100, 100))
         self.tile_map.set_position_from_center(Vec2(self.width / 2, self.height / 2))
