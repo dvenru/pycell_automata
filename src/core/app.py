@@ -17,20 +17,18 @@ class AppWindow(pgl.window.Window):
 
         self.cursor = TileMapCursor(self.tile_map)
 
-        self.automat = Automat(self.tile_map)
-        # self.automat.life_rule.set_states(4, [
-        #     (189, 224, 254),
-        #     (255, 200, 221),
-        #     (255, 175, 204),
-        #     (205, 180, 219)
-        # ])
+        custom_rule = {
+            "life": [0, 3, 4, 5],
+            "birth": [2]
+        }
 
-        self.automat.life_rule.set_states(11, [])
+        self.automat = Automat(self.tile_map, custom_rule)
+        self.automat.life_rule.set_states(11, [(0, 0, 0), (230, 57, 70)], True)
+        self.automat.update_colors()
 
         self.fps_label = pgl.window.FPSDisplay(window = self)
 
         pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
-        print(self.automat.speed)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if self.cursor.focused_on_map:
