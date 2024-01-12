@@ -1,6 +1,13 @@
-def lerpi(start_value: int | float, end_value: int | float, steps: int) -> list[int | float]:
-    if start_value > end_value:
-        start_value, end_value = end_value, start_value
+def lerp(start_value: int | float, end_value: int | float, steps: int) -> list[float]:
+    """
+    Implementation of linear interpolation. The function returns a list[float] with initial
+    values and intermediate values. The intermediate values are on equal segments.
+
+    :param start_value:
+    :param end_value:
+    :param steps:
+    :return:
+    """
 
     inc = (end_value - start_value) / (steps + 1)
     return_list = [start_value]
@@ -9,3 +16,36 @@ def lerpi(start_value: int | float, end_value: int | float, steps: int) -> list[
     return_list.append(end_value)
 
     return return_list
+
+
+def lerp_color(
+        start_value: tuple[int, int, int] | tuple[int, int, int, int],
+        end_value: tuple[int, int, int, int] | tuple[int, int, int, int],
+        steps: int
+) -> list[tuple[int, int, int] | tuple[int, int, int, int]]:
+    """
+    Implementation of linear interpolation. The function returns a list[tuple] with initial
+    values and intermediate values. The intermediate values are on equal segments. The color
+    can be transmitted in rgb(0 - 255) or rgba(0 - 255) format.
+
+    :param start_value:
+    :param end_value:
+    :param steps:
+    :return:
+    """
+
+    return_list = [start_value]
+    for _ in range(steps):
+        color = (
+            lerp(start_value[0], end_value[0], steps),
+            lerp(start_value[1], end_value[1], steps),
+            lerp(start_value[2], end_value[2], steps)
+        )
+        if len(start_value) == 4:
+            color += (lerp(start_value[3], end_value[3], steps))
+        return_list.append(color)
+    return_list.append(end_value)
+    return return_list
+
+
+print(lerp(20, 10, 4))
