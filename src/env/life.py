@@ -37,9 +37,9 @@ class LifeRule:
                 self.state_colors[index_color] = colors[index_color]
         else:
             if len(colors) == 2 and create_gradient:
-                r_list = math.lerpi(colors[0][0], colors[1][0], count_states - 2)
-                g_list = math.lerpi(colors[0][1], colors[1][1], count_states - 2)
-                b_list = math.lerpi(colors[0][2], colors[1][2], count_states - 2)
+                r_list = math.lerp(colors[0][0], colors[1][0], count_states - 2)
+                g_list = math.lerp(colors[0][1], colors[1][1], count_states - 2)
+                b_list = math.lerp(colors[0][2], colors[1][2], count_states - 2)
                 for index_color in range(count_states):
                     self.state_colors[index_color] = (
                         int(r_list[index_color]),
