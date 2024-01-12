@@ -7,18 +7,24 @@ from src.env.tilemap import TileMap
 
 
 class Automat:
+    SPEED_UP = 1
+    SPEED_DOWN = 0
 
-    def __init__(self, tile_map: TileMap) -> None:
+    def __init__(self, tile_map: TileMap, rule: dict = None) -> None:
         size = tile_map.get_size_map()
         self.present_map = [[0 for _ in range(size[0])] for _ in range(size[1])]
         self.future_map = [[0 for _ in range(size[0])] for _ in range(size[1])]
 
         self.tile_map = tile_map
-        self.life_rule = LifeRule()
+        self.life_rule = LifeRule(rule)
         self._init_tile_map_tiles()
 
-        self.update_speed = 1/8
+        self.speed = 8.0
         self.is_paused = False
+
+    def update_speed(self, speed_state: int) -> None:
+        new_speed = clamp(self.speed * 2.0 if speed_state else self.speed / 2.0, 1.0, 32.0)
+        self.speed = new_speed
 
     def _init_tile_map_tiles(self) -> None:
         for num_line in range(len(self.present_map)):
@@ -33,6 +39,11 @@ class Automat:
                         color = self.life_rule.state_colors[self.present_map[num_line][num_tile]]
                     )
                 )
+
+    def update_colors(self) -> None:
+        for num_line in range(len(self.present_map)):
+            for num_tile in range(len(self.present_map[0])):
+                self.tile_map.get_tile((num_tile, num_line)).color = self.life_rule.state_colors[self.present_map[num_line][num_tile]]
 
     def set_tile(self, position: tuple[int, int], is_birth: bool = True) -> None:
         if 0 <= position[1] < len(self.present_map) and 0 <= position[0] < len(self.present_map[0]):
