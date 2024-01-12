@@ -62,6 +62,12 @@ class AppWindow(pgl.window.Window):
             self.automat.update_speed(self.automat.SPEED_DOWN)
             pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
 
+        # App control
+        if symbol == key.ESCAPE:
+            self.close()
+        elif symbol == key.F11:
+            self.set_fullscreen(not self.fullscreen)
+
     def on_draw(self) -> None:
         self.clear()
         self.tile_map.map_batch.draw()
