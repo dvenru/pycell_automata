@@ -59,6 +59,11 @@ class AppWindow(pgl.window.Window):
 
     def on_mouse_drag(self, x: int, y: int, dx: int, dy: int, buttons, modifiers) -> None:
         self.cursor.update_position((x, y))
+        if self.cursor.focused_on_map:
+            if buttons & mouse.LEFT:
+                self.automat.set_tile(self.cursor.on_map_pos)
+            elif buttons & mouse.RIGHT:
+                self.automat.set_tile(self.cursor.on_map_pos, False)
 
     def on_key_press(self, symbol, modifiers) -> None:
         # Speed control
