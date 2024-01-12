@@ -46,6 +46,3 @@ def lerp_color(
         return_list.append(color)
     return_list.append(end_value)
     return return_list
-
-
-print(lerp(20, 10, 4))
