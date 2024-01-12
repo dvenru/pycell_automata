@@ -47,6 +47,3 @@ def lerp_color(
     return_list.append(end_value)
 
     return return_list
-
-
-print(lerp_color((0, 0, 0), (255, 255, 255), 4))
