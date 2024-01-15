@@ -59,6 +59,11 @@ class AppWindow(pgl.window.Window):
 
     def on_mouse_drag(self, x: int, y: int, dx: int, dy: int, buttons, modifiers) -> None:
         self.cursor.update_position((x, y))
+        if self.cursor.focused_on_map:
+            if buttons & mouse.LEFT:
+                self.automat.set_tile(self.cursor.on_map_pos)
+            elif buttons & mouse.RIGHT:
+                self.automat.set_tile(self.cursor.on_map_pos, False)
 
     def on_key_press(self, symbol, modifiers) -> None:
         # Speed control
@@ -77,6 +82,7 @@ class AppWindow(pgl.window.Window):
             self.automat.update_speed(self.automat.SPEED_UP)
             pgl.clock.schedule_interval(self.automat.update, 1.0/self.automat.speed)
             self.speed_label.text = f"SPEED: {self.automat.speed}"
+
         elif symbol == key.LEFT and not self.automat.is_paused:
             pgl.clock.unschedule(self.automat.update)
             self.automat.update_speed(self.automat.SPEED_DOWN)
@@ -86,6 +92,8 @@ class AppWindow(pgl.window.Window):
         # App control
         if symbol == key.ESCAPE:
             self.close()
+        elif symbol == key.TAB:
+            self.automat.clear_map()
         elif symbol == key.F11:
             self.set_fullscreen(not self.fullscreen)
 

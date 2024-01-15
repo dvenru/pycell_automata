@@ -11,9 +11,9 @@ class Automat:
     SPEED_DOWN = 0
 
     def __init__(self, tile_map: TileMap, rule: dict = None) -> None:
-        size = tile_map.get_size_map()
-        self.present_map = [[0 for _ in range(size[0])] for _ in range(size[1])]
-        self.future_map = [[0 for _ in range(size[0])] for _ in range(size[1])]
+        self.size = tile_map.get_size_map()
+        self.present_map = [[0 for _ in range(self.size[0])] for _ in range(self.size[1])]
+        self.future_map = [[0 for _ in range(self.size[0])] for _ in range(self.size[1])]
 
         self.tile_map = tile_map
         self.life_rule = LifeRule(rule)
@@ -49,6 +49,16 @@ class Automat:
         if 0 <= position[1] < len(self.present_map) and 0 <= position[0] < len(self.present_map[0]):
             self.present_map[position[1]][position[0]] = self.life_rule.states - 1 if is_birth else 0
             self.tile_map.get_tile((position[0], position[1])).color = self.life_rule.state_colors[self.present_map[position[1]][position[0]]]
+
+    def clear_map(self) -> None:
+        self.present_map = [[0 for _ in range(self.size[0])] for _ in range(self.size[1])]
+        self.future_map = [[0 for _ in range(self.size[0])] for _ in range(self.size[1])]
+
+        for num_line in range(len(self.present_map)):
+            for num_tile in range(len(self.present_map[0])):
+                self.tile_map.get_tile((num_tile, num_line)).color = self.life_rule.state_colors[
+                    self.present_map[num_line][num_tile]]
+
 
     def update(self, _dt) -> None:
         for num_line in range(1, len(self.present_map) - 1):
